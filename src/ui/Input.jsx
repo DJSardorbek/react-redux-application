@@ -11,7 +11,7 @@ const Input = ({state, setState, label, type="text"}) => {
         id='floatingInput'
         placeholder={label} 
     />
-    <label for="floatingInput">{label}</label>
+    <label htmlFor="floatingInput">{label}</label>
     </div>
     
   )
