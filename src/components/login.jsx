@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import {Input} from '../ui'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginUserStart } from '../slice/auth'
+import { signUserFailure, signUserStart, signUserSuccess } from '../slice/auth'
+import AuthService from '../service/auth'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -9,9 +10,20 @@ const Login = () => {
   const {isLoading} = useSelector(state => state.auth)  
   const dispatch = useDispatch()
 
-  const submitHandler = (e) => {
+  const loginHandler = async (e) => {
     e.preventDefault()
-    dispatch(loginUserStart())
+    dispatch(signUserStart())
+    const user = {email, password} 
+    try {
+
+      const response = await AuthService.userLogin(user)
+      dispatch(signUserSuccess(response.user))
+
+    } catch (error) {
+      
+      dispatch(signUserFailure(error.response.data.errors))
+
+    }
   }
 
   return (
@@ -27,7 +39,7 @@ const Login = () => {
       <button 
         className="btn btn-lg btn-primary btn-block mt-2 w-100" 
         type="submit" 
-        onClick={submitHandler}
+        onClick={loginHandler}
         disabled= {isLoading}>
           {isLoading? 'loading...' : 'Login'}
       </button>
