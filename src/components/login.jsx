@@ -31,7 +31,7 @@ const Login = () => {
   }
   useEffect(() => {
     loggedIn === true && navigate('/')
-  }, [])
+  }, [loggedIn])
 
   return (
     <div className='text-center mt-5'>

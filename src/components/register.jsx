@@ -33,7 +33,7 @@ const Register = () => {
 
   useEffect(() => {
     loggedIn === true && navigate('/')
-  }, [])
+  }, [loggedIn])
 
   return (
     <div className='text-center d-flex align-items-center justify-content-center'>
