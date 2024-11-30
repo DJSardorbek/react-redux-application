@@ -1,8 +1,18 @@
-import { useSelector } from "react-redux"
-import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { Link, useNavigate } from "react-router-dom"
+import { removeItem } from "../helpers/persistence-storage"
+import { logoutUser } from "../slice/auth"
 
 const Navbar = () => {
   const {loggedIn, user} = useSelector(state => state.auth)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const logoutHandler = () => {
+    dispatch(logoutUser())
+    removeItem('token')
+    navigate('/login')
+  }
   return (
     <div className="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom pt-1 container">
       
@@ -15,7 +25,7 @@ const Navbar = () => {
       {loggedIn ? 
       <>
         <p className="me-3 py-2 m-0 link-body-emphasis text-decoration-none">{user.username}</p>
-        <button className="btn btn-outline-danger">Logout</button>
+        <button className="btn btn-outline-danger" onClick={e => logoutHandler()}>Logout</button>
       </> : 
       <>
 
