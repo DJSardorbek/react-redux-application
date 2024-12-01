@@ -1,10 +1,12 @@
 import {useSelector} from 'react-redux'
+import { Loader } from '../ui'
 
 const Main = () => {
-	const {articles} = useSelector(state => state.article)
+	const {articles, isLoading} = useSelector(state => state.article)
 
 	return (
 		<div className='container'>
+      {isLoading && <Loader/>}
 			<div className='album py-5 '>
 				<div className='container'>
 					<div className='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3'>
@@ -26,9 +28,10 @@ const Main = () => {
 									</svg>
 
 									<div className='card-body'>
-										<p className='card-text fw-bold'>{item.title}</p>
+										<p className='card-text fw-bold m-0'>{item.title}</p>
 										<p className='card-text'>{item.description}</p>
-										<div className='d-flex justify-content-between align-items-center'>
+									</div>
+										<div className='d-flex card-footer justify-content-between align-items-center'>
 											<div className='btn-group'>
 												<button type='button' className='btn btn-sm btn-outline-success'>
 													View
@@ -42,7 +45,6 @@ const Main = () => {
 											</div>
 											<small className='text-muted fw-bold text-capitalize'>{item.author.username}</small>
 										</div>
-									</div>
 								</div>
 							</div>
 						))}
