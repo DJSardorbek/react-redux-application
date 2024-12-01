@@ -7,6 +7,8 @@ import AuthService from './service/auth';
 import { useDispatch } from 'react-redux';
 import { signUserSuccess } from './slice/auth';
 import { getItem } from './helpers/persistence-storage';
+import { getArticlesStart, getArticlesSuccess } from './slice/article';
+import articleService from './service/article';
 
 function App() {
   const dispatch = useDispatch()
@@ -16,12 +18,24 @@ function App() {
       dispatch(signUserSuccess(response.user))
     } catch (error) {
       console.log(error)
-    }}
+    }
+  }
+  const getArticle = async () => {
+    dispatch(getArticlesStart())
+    try {
+      const response = await articleService.getArticles()
+      dispatch(getArticlesSuccess(response.articles))
+    } catch (error) {
+      console.log('error getting articles')
+    }
+  }
+
   useEffect(() => {
     const token = getItem('token')
     if(token){
       getUser()
     }
+    getArticle()
   },[])
   return (
     <div className="App">
