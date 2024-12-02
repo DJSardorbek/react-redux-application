@@ -1,6 +1,6 @@
 import axios from './api'
 
-const articleService = {
+const ArticleService = {
     async getArticles() {
         const response = await axios.get('/articles')
         return response.data 
@@ -11,4 +11,4 @@ const articleService = {
     }
 }
 
-export default articleService
+export default ArticleService
