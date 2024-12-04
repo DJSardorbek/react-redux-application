@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getArticlesStart, getArticlesSuccess } from '../slice/article';
 import articleService from '../service/article';
+import ArticleService from '../service/article';
 
 const Main = () => {
 	const { articles, isLoading } = useSelector(state => state.article)
@@ -16,6 +17,14 @@ const Main = () => {
 			dispatch(getArticlesSuccess(response.articles))
 		} catch (error) {
 			console.log('error getting articles')
+		}
+	}
+	const deleteArticle = async slug => {
+		try {
+			await ArticleService.deleteArticle(slug)
+			getArticle()
+		} catch (error) {
+			console.log(error)
 		}
 	}
 	useEffect(() => {
@@ -56,7 +65,7 @@ const Main = () => {
 											<button type='button' className='btn btn-sm btn-outline-secondary'>
 												Edit
 											</button>
-											<button type='button' className='btn btn-sm btn-outline-danger'>
+											<button type='button' className='btn btn-sm btn-outline-danger' onClick={e => deleteArticle(item.slug)}>
 												Delete
 											</button>
 										</div>
