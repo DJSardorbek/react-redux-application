@@ -1,14 +1,13 @@
 import './App.css';
 import {Routes, Route} from 'react-router-dom'
-import {Main, Login, Register, ArticleDetail, CreateArticle} from './components'
+import {Main, Login, Register, ArticleDetail, CreateArticle, EditArticle} from './components'
 import {Navbar} from './components'
 import { useEffect } from 'react';
 import AuthService from './service/auth';
 import { useDispatch } from 'react-redux';
 import { signUserSuccess } from './slice/auth';
 import { getItem } from './helpers/persistence-storage';
-import { getArticlesStart, getArticlesSuccess } from './slice/article';
-import articleService from './service/article';
+
 
 function App() {
   const dispatch = useDispatch()
@@ -20,22 +19,13 @@ function App() {
       console.log(error)
     }
   }
-  const getArticle = async () => {
-    dispatch(getArticlesStart())
-    try {
-      const response = await articleService.getArticles()
-      dispatch(getArticlesSuccess(response.articles))
-    } catch (error) {
-      console.log('error getting articles')
-    }
-  }
+  
 
   useEffect(() => {
     const token = getItem('token')
     if(token){
       getUser()
     }
-    getArticle()
   },[])
   return (
     <div className="App">
@@ -47,6 +37,7 @@ function App() {
           <Route path={'/register'} element={<Register/>}/>
           <Route path={'/articles/:slug'} element={<ArticleDetail/>}/>
           <Route path={'/create-article'} element={<CreateArticle/>}/>
+          <Route path={'/edit-article/:slug'} element={<EditArticle/>}/>
         </Routes>
         </div>
     </div>
