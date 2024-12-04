@@ -8,6 +8,10 @@ const ArticleService = {
     async getArticleDetail (slug) {
         const response = await axios.get(`/articles/${slug}`)
         return response.data
+    },
+    async postArticle(article) {
+        const {data} = await axios.post('/articles', {article})
+        return data
     }
 }
 

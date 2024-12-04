@@ -1,13 +1,29 @@
-import {useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Loader } from '../ui'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { getArticlesStart, getArticlesSuccess } from '../slice/article';
+import articleService from '../service/article';
 
 const Main = () => {
-	const {articles, isLoading} = useSelector(state => state.article)
-  const navigate = useNavigate()
+	const { articles, isLoading } = useSelector(state => state.article)
+	const navigate = useNavigate()
+	const dispatch = useDispatch()
+	const getArticle = async () => {
+		dispatch(getArticlesStart())
+		try {
+			const response = await articleService.getArticles()
+			dispatch(getArticlesSuccess(response.articles))
+		} catch (error) {
+			console.log('error getting articles')
+		}
+	}
+	useEffect(() => {
+		getArticle();
+	}, [])
 	return (
 		<div>
-      {isLoading && <Loader/>}
+			{isLoading && <Loader />}
 			<div className='album py-5 '>
 				<div>
 					<div className='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3'>
@@ -32,20 +48,20 @@ const Main = () => {
 										<p className='card-text fw-bold m-0'>{item.title}</p>
 										<p className='card-text'>{item.description}</p>
 									</div>
-										<div className='d-flex card-footer justify-content-between align-items-center'>
-											<div className='btn-group'>
-												<button type='button' className='btn btn-sm btn-outline-success' onClick={() => navigate(`/articles/${item.slug}`)}>
-													View
-												</button>
-												<button type='button' className='btn btn-sm btn-outline-secondary'>
-													Edit
-												</button>
-												<button type='button' className='btn btn-sm btn-outline-danger'>
-													Delete
-												</button>
-											</div>
-											<small className='text-muted fw-bold text-capitalize'>{item.author.username}</small>
+									<div className='d-flex card-footer justify-content-between align-items-center'>
+										<div className='btn-group'>
+											<button type='button' className='btn btn-sm btn-outline-success' onClick={() => navigate(`/articles/${item.slug}`)}>
+												View
+											</button>
+											<button type='button' className='btn btn-sm btn-outline-secondary'>
+												Edit
+											</button>
+											<button type='button' className='btn btn-sm btn-outline-danger'>
+												Delete
+											</button>
 										</div>
+										<small className='text-muted fw-bold text-capitalize'>{item.author.username}</small>
+									</div>
 								</div>
 							</div>
 						))}
