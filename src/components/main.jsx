@@ -1,15 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Loader } from '../ui'
-import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getArticlesStart, getArticlesSuccess } from '../slice/article';
 import articleService from '../service/article';
-import ArticleService from '../service/article';
+import { ArticleCard } from '../components'
 
 const Main = () => {
 	const { articles, isLoading } = useSelector(state => state.article)
-	const {loggedIn, user} = useSelector(state => state.auth)
-	const navigate = useNavigate()
+
 	const dispatch = useDispatch()
 	const getArticle = async () => {
 		dispatch(getArticlesStart())
@@ -20,74 +18,29 @@ const Main = () => {
 			console.log('error getting articles')
 		}
 	}
-	const deleteArticle = async slug => {
-		try {
-			await ArticleService.deleteArticle(slug)
-			getArticle()
-		} catch (error) {
-			console.log(error)
-		}
-	}
+
 	useEffect(() => {
 		getArticle();
 	}, [])
 	return (
 		<div>
-			{isLoading && <Loader />}
-			<div className='album py-5 '>
-				<div>
-					<div className='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3'>
-						{articles.map(item => (
-							<div className='col' key={item.id}>
-								<div className='card h-100 shadow-sm'>
-									<svg
-										className='bd-placeholder-img card-img-top'
-										width='100%'
-										height='225'
-										xmlns='http://www.w3.org/2000/svg'
-										role='img'
-										aria-label='Placeholder: Thumbnail'
-										preserveAspectRatio='xMidYMid slice'
-										focusable='false'
-									>
-										<title>Placeholder</title>
-										<rect width='100%' height='100%' fill='#55595c'></rect>
-									</svg>
+			{isLoading ? <Loader /> : (
 
-									<div className='card-body'>
-										<p className='card-text fw-bold m-0'>{item.title}</p>
-										<p className='card-text'>{item.description}</p>
-									</div>
-									<div className='d-flex card-footer justify-content-between align-items-center'>
-										<div className='btn-group'>
-											<button type='button' className='btn btn-sm btn-outline-success' onClick={() => navigate(`/articles/${item.slug}`)}>
-												View
-											</button>
-											{loggedIn && user.username === item.author.username && (
-												<>
-													<button type='button' className='btn btn-sm btn-outline-secondary' 
-													onClick={() => navigate(`/edit-article/${item.slug}`)}>
-														Edit
-													</button>
-													<button
-														type='button'
-														className='btn btn-sm btn-outline-danger'
-														onClick={() => deleteArticle(item.slug)}
-													>
-														Delete
-													</button>
-												</>
-											)}
-										</div>
-										<small className='text-muted fw-bold text-capitalize'>{item.author.username}</small>
-									</div>
-								</div>
-							</div>
-						))}
+				<div className='album py-5 '>
+					<div>
+						<div className='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3'>
+							{articles.map(item => (
+								<ArticleCard item={item} getArticle={getArticle} />
+							))}
+						</div>
 					</div>
 				</div>
-			</div>
+			)}
+
+
 		</div>
+
+
 	)
 }
 
